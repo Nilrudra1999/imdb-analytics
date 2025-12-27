@@ -1,6 +1,6 @@
 # IMDb Analytics
 
-An end-to-end data analytics system that pulls IMBd movie data from multiple sources through an ETL pipeline, to analyze historical trends over the past 10 years and create future movie predictions. The tech stack used for this project includes:
+An end-to-end data analytics system that pulls IMBd movie data from APIs through an ETL pipeline, to analyze historical trends over the past 10-20 years and create future movie predictions. The tech stack used for this project includes:
 
 - python to script the ETL pipeline
 - airflow to managing the script execution
@@ -15,25 +15,23 @@ An end-to-end data analytics system that pulls IMBd movie data from multiple sou
 
 ### Data Sources Used
 
-Both data sources used are third-party APIs with movie information however, each behaves slightly differently. IMDbAPI allows users to request information through GET routes based on titles, actor names, and interests. Meanwhile, OMDb API works exclusives through GET routes tied to movie names and an API key appended to the end of the URL string.<br>
+This project uses two third-party APIs as its data sources with varying uses. The IMDbAPI is used exclusively to pull detailed movie revenue information using a GET route with specific movie IDs. Meanwhile, the OMDb API acquires all other movie information such as release dates, ratings, casts members, awards, and etc. through API key dependant routes.<br>
 
-IMDbAPI: https://imdbapi.dev/ published on January 2024<br>
-Base URL: [api.imdbapi.dev] and requires get routes to request info:
+<b>OMDb API</b>, [The Open Movie Database](https://www.omdbapi.com/) published over 10 years ago<br>
+Made by Brian Fritz, and licensed under CC BY-NC 4.0<br>
+Routes most used throughout this project:
+
+- //?t=[some title spaces filled with '+']&apikey=########
+
+<b>IMDbAPI</b> [Free IMDb API](https://imdbapi.dev/) published on January 2024<br>
+Routes most used throughout this project:
 
 - /search/titles
-- /titles
-- /titles/{titleId}
-- /titles/{titleId}/seasons
-- /titles/{titleId}/awardNominations
 - /titles/{titleId}/boxOffice
-- /titles/{titleId}/releaseDates
 
-OMDb API, The Open Movie Database: https://www.omdbapi.com/ published over 10 years ago<br>
-Made by Brian Fritz, and licensed under CC BY-NC 4.0<br>
-Base URL: [www.omdbapi.com] and requires movie names and an API key to request info:
+### Relational Database Structure
 
-- /?t=iron+man&apikey=########
-- /?t=Knives+Out&apikey=########
+![Relational database tables structure](<relational database tables structure.png>)
 
 ---
 
