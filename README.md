@@ -13,6 +13,28 @@ An end-to-end data analytics system that pulls IMBd movie data from multiple sou
 
 ![System structure end-to-end](<system structure.png>)
 
+### Data Sources Used
+
+Both data sources used are third-party APIs with movie information however, each behaves slightly differently. IMDbAPI allows users to request information through GET routes based on titles, actor names, and interests. Meanwhile, OMDb API works exclusives through GET routes tied to movie names and an API key appended to the end of the URL string.<br>
+
+IMDbAPI: https://imdbapi.dev/ published on January 2024<br>
+Base URL: [api.imdbapi.dev] and requires get routes to request info:
+
+- /search/titles
+- /titles
+- /titles/{titleId}
+- /titles/{titleId}/seasons
+- /titles/{titleId}/awardNominations
+- /titles/{titleId}/boxOffice
+- /titles/{titleId}/releaseDates
+
+OMDb API, The Open Movie Database: https://www.omdbapi.com/ published over 10 years ago<br>
+Made by Brian Fritz, and licensed under CC BY-NC 4.0<br>
+Base URL: [www.omdbapi.com] and requires movie names and an API key to request info:
+
+- /?t=iron+man&apikey=########
+- /?t=Knives+Out&apikey=########
+
 ---
 
 <b>Author:</b> Nilrudra Mukhopadhyay<br>
