@@ -5,9 +5,8 @@ Author: Nilrudra Mukhopadhyay
 Email: nilrudram@gmail.com
 ------------------------------------------------------------------------------
 The script executes the following in the same order as written below:
-
-- delete any prior tables if any are within the database
-- create tables with, primary/foreign keys, and not null constraints
+1. delete any prior tables if any are within the database
+2. create tables with, primary/foreign keys, and not null constraints
 ******************************************************************************/
 use imdb_analytics;
 go
