@@ -1,2 +1,4 @@
-data/
 .env
+
+# temp ignore until data is collected
+imdb_analytics*
