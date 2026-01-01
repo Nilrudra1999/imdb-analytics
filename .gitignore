@@ -1,4 +1,7 @@
+# contains private API keys, and DB information
+# not safe for public github repo exposure
 .env
 
-# temp ignore until data is collected
+# database object files, size is too large for github upload
+# individual .xlsx files for DB tables will be provided instead 
 imdb_analytics*

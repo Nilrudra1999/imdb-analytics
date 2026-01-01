@@ -10,8 +10,8 @@ The script performs the following actions on newly created tables:
 3. check not null constraints
 4. check primary and foreign key constraints
 5. delete all newly added records from tables
-******************************************************************************/
-use imdb_analytics;
+*****************************************************************************/
+use imdb_analytics_database;
 go
 
 -- following insert stmts should execute without errors

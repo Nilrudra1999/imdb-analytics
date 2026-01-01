@@ -7,8 +7,8 @@ Email: nilrudram@gmail.com
 The script executes the following in the same order as written below:
 1. delete any prior tables if any are within the database
 2. create tables with, primary/foreign keys, and not null constraints
-******************************************************************************/
-use imdb_analytics;
+*****************************************************************************/
+use imdb_analytics_database;
 go
 
 drop table if exists dbo.ratings;
