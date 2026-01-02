@@ -6,6 +6,12 @@ Final report (coming soon).
 
 <b>Author:</b> Nilrudra Mukhopadhyay<br>
 <b>Project Type:</b> Data analyst portfolio project - independently built<br>
+<b>Data Sources:</b>
+
+- [Movie Titles from IMDb Directly](/data/title.basics.tsv)
+- [OMDb API open IMDb database, IMDb ID based](https://www.omdbapi.com/)
+- [Free IMDb API, IMDb ID based](https://imdbapi.dev/)
+
 <b>Tech Stack:</b>
 
 - Python
