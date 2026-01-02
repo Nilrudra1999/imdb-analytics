@@ -8,7 +8,7 @@ Final report (coming soon).
 <b>Project Type:</b> Data analyst portfolio project - independently built<br>
 <b>Data Sources:</b>
 
-- [Movie Titles from IMDb Directly](/data/title.basics.tsv)
+- [Publicly available IMDb dataset](/data/title.basics.tsv)
 - [OMDb API open IMDb database, IMDb ID based](https://www.omdbapi.com/)
 - [Free IMDb API, IMDb ID based](https://imdbapi.dev/)
 
