@@ -6,12 +6,32 @@
     -----------------------------------------------------------------------
     This automation script controls the overall execution of the pipeline
     from extracting IMDb movie IDs from the public dataset, extracting
-    all related JSON info from the APIs, cleaning, and loading the data.
+    all related JSON info from the APIs, cleaning, and loading that data.
 ----------------------------------------------------------------------------"""
-import imdb_id_extractor
+import argparse
+import imdb_id_extractor, extract
 
-def run_etl_processes():
-    imdb_id_extractor.extract_txt_with_ids()
-    
+def get_movieIDs_from_tsv():
+    imdb_id_extractor.extract_txt()
+
+   
+def get_movie_data():
+    extract.extract_raw_json_for_csv()
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Movies ETL pipeline")
+    parser.add_argument(
+        "command",
+        choices=["get_ids", "get_data"],
+        help="Which process to run"
+    )
+    args = parser.parse_args()
+    # filter movie IDs from the public tsv file
+    if args.command == "get_ids": get_movieIDs_from_tsv()
+    # run the actual ETL pipeline based on collected IDs
+    elif args.command == "get_data": get_movie_data()
+        
+
 if __name__ == "__main__":
-    run_etl_processes()
+    main()

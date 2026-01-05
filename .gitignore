@@ -6,6 +6,8 @@
 # individual .xlsx files for DB tables will be provided instead 
 imdb_analytics*
 
-# compiled files and large dataset files
+# compiled, env, and large dataset files
 __pycache__
 data/title.basics.tsv
+.vscode/
+venv/
