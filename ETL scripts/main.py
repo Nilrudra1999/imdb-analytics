@@ -12,11 +12,11 @@ import argparse
 import imdb_id_extractor, extract
 
 def get_movieIDs_from_tsv():
-    imdb_id_extractor.extract_txt()
+    imdb_id_extractor.load_textFile_with_movie_ids()
 
-   
+
 def get_movie_data():
-    extract.extract_raw_json_for_csv()
+    extract.process_movie_data_extraction()
 
 
 def main():
@@ -31,7 +31,7 @@ def main():
     if args.command == "get_ids": get_movieIDs_from_tsv()
     # run the actual ETL pipeline based on collected IDs
     elif args.command == "get_data": get_movie_data()
-        
+
 
 if __name__ == "__main__":
     main()

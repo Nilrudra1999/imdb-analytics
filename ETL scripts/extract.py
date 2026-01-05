@@ -21,20 +21,17 @@ __starting_row = int(os.getenv("EXT_STARTING_ROW", 0))
 __BASE_DIR = Path(__file__).resolve().parent.parent
 __ID_FILE = __BASE_DIR / "data" / "imdb_movie_ids.txt"
 __RAW_CSV =__BASE_DIR / "data" / "raw" / "data.csv"
+__ENV_FILE = __BASE_DIR / "ETL scripts" / ".env"
 __MAX_MOVIES = 3
 
 
-# since the APIs only allow 1000 requests daily, the ETL pipeline can only extract that much
-# each time the pipeline runs the starting row to read from changes, since num of IDs > 1000
-def extract_raw_json_for_csv():
+# APIs only allow 1000 requests daily, but the num of IDs > 1000
+# so there is leftover IDs from pervious runs, discard lines method handles this issue
+def process_movie_data_extraction():
     row_count = 0
-    with open(__ID_FILE, "r", encoding="utf-8") as id_file, open(__RAW_CSV, "a", encoding="utf-8") as out_file:
-        for _ in range(__starting_row): # discarding (n) lines
-            line = id_file.readline()
-            if not line:
-                print(f"Reached EOF before starting row {__starting_row}")
-                return
-        
+    with open(__ID_FILE, "r", encoding="utf-8") as id_file, \
+         open(__RAW_CSV, "a", encoding="utf-8") as output_file:
+        __discard_lines_before_starting_row(id_file)
         while row_count < __MAX_MOVIES:
             line = id_file.readline()
             if not line: break # EOF state
@@ -43,18 +40,25 @@ def extract_raw_json_for_csv():
             movie_data = __fetch_omdb_data(movie_id)
             movie_BO_data = __fetch_box_office_data(movie_id)
 
-            out_file.write(f"Movie ID: {movie_id}\n")
-            out_file.write(f"{movie_data}\n")
-            out_file.write(f"{movie_BO_data}\n")
+            output_file.write(f"Movie ID: {movie_id}\n")
+            output_file.write(f"{movie_data}\n")
+            output_file.write(f"{movie_BO_data}\n")
             row_count += 1
-        update_starting_row_count_env(__starting_row + row_count)
+        __update_starting_row_count(__starting_row + row_count)
 
 
-def update_starting_row_count_env(value: int):
-    env_file = __BASE_DIR / "ETL scripts" / ".env"
-    lines = env_file.read_text().splitlines()
+def __discard_lines_before_starting_row(id_file):
+    for _ in range(__starting_row):
+        line = id_file.readline()
+        if not line:
+            print("EOF reached before starting row")
+            return
+
+
+def __update_starting_row_count(value: int):
+    lines = __ENV_FILE.read_text().splitlines()
     lines[-1] = f"EXT_STARTING_ROW={value}"
-    env_file.write_text("\n".join(lines) + "\n")
+    __ENV_FILE.write_text("\n".join(lines) + "\n")
     print(f"Updated EXT_STARTING_ROW={value} in .env")
 
 
