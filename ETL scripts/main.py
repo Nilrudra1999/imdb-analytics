@@ -9,18 +9,20 @@
     all related JSON info from the APIs, cleaning, and loading that data.
 ----------------------------------------------------------------------------"""
 import argparse
-import imdb_id_extractor, extract
+import imdb_id_extractor, extract, transform
 
 def get_movieIDs_from_tsv():
-    imdb_id_extractor.load_textFile_with_movie_ids()
+    imdb_id_extractor.load_text_file_with_imdbIDs()
 
 
 def get_movie_data():
     extract.process_movie_data_extraction()
+    # transform.process_movie_data_transformations()
+    # load.transfer_movies_into_database()
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Movies ETL pipeline")
+    parser = argparse.ArgumentParser(description="IMDb ETL pipeline")
     parser.add_argument(
         "command",
         choices=["get_ids", "get_data"],
