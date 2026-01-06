@@ -17,7 +17,7 @@ def get_movieIDs_from_tsv():
 
 def get_movie_data():
     extract.process_movie_data_extraction()
-    # transform.process_movie_data_transformations()
+    transform.process_movie_data_transformations()
     # load.transfer_movies_into_database()
 
 
