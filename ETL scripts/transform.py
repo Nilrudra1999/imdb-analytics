@@ -8,92 +8,105 @@
     files to transform the raw csv data into a more tabular format 
     after cherry picking the necessary information needed for the DB.
 ----------------------------------------------------------------------------"""
-import csv
-import json
-from pathlib import Path
+from csv import DictReader, DictWriter
+from json import loads
 from datetime import datetime
 
-__BASE_DIR = Path(__file__).resolve().parent.parent
-__RAW_CSV = __BASE_DIR / "data" / "raw" / "data.csv"
-__PROCESSED_CSV = __BASE_DIR / "data" / "processed" / "data.csv"
-__movie_json_fieldnames = [
+__MOVIE_JSON_FIELDNAMES = [
     "Title", "Runtime", "Released", "Country", 
     "Director", "Writer", "Actors",
     "Genre", "Ratings", "Awards"
 ]
-__box_office_json_fieldnames = [
+
+__BOX_OFFICE_JSON_FIELDNAMES = [
     "productionBudget", "domesticGross",
     "worldwideGross", "openingWeekendGross"
 ]
 
 
-def process_movie_data_transformations():
-    with open(__RAW_CSV, "r", encoding="utf-8") as read_file, \
-         open(__PROCESSED_CSV, "w", encoding="utf-8") as write_file:
-        movie_data = __process_movie_data(read_file)
-        movie_data = __discard__incomplete_records(movie_data)
-        movie_data = [
-            normalized for record in movie_data
-            if (normalized := __normalize_movie_data(record))
-        ]
-        __write_processed_data(movie_data, write_file)
+def parse_raw_movie_data(base_directory):
+    raw_csv = base_directory / "data" / "raw" / "data.csv"
+    processed_csv = base_directory / "data" / "processed" / "data.csv"
+    normalized_movie_data = []
+    
+    reader_file = __open_reader_file(raw_csv)
+    writer_file = __open_writer_file(processed_csv)
+    
+    movie_data  = __parsing_data(reader_file)
+    movie_data  = __discard__incomplete_records(movie_data)
+    for record in movie_data:
+        normalized = __normalize_movie_data(record)
+        if normalized is not None: normalized_movie_data.append(normalized)
+    movie_data = normalized_movie_data
+    __write_processed_data(movie_data, writer_file)
 
 
-def __process_movie_data(read_file):
+def __open_reader_file(dataset):
+    reader_file = open(dataset, "r", encoding="utf-8")
+    return reader_file
+
+
+def __open_writer_file(dataset):
+    writer_file = open(dataset, "w", encoding="utf-8")
+    return writer_file
+
+
+def __parsing_data(dataset):
     processed_data = []
-    reader = csv.DictReader(read_file)
-    for row in reader:
-        record = __load_omdb_data(row)
-        record = __load_box_office_data(row, record)
-        processed_data.append(record)
+    records = DictReader(dataset)
+    for record in records:
+        movie_data = __load_omdb_data(record)
+        movie_data = __load_box_office_data(record, movie_data)
+        processed_data.append(movie_data)
     return processed_data
 
 
-def __load_omdb_data(row):
-    movie_json = json.loads(row['omdb_data'])
-    processed_record = {
-        field: movie_json.get(field, "N/A") 
-        for field in __movie_json_fieldnames
-    }
-    return processed_record
+def __load_omdb_data(record):
+    movie_json = loads(record['omdb_data'])
+    processed_json = {}
+    for field in __MOVIE_JSON_FIELDNAMES:
+        value = movie_json.get(field, "N/A")
+        processed_json[field] = value
+    return processed_json
 
 
-def __load_box_office_data(row, processed_record):
-    box_office_json = json.loads(row['box_office_data'])
-    for field in __box_office_json_fieldnames:
+# box office data is kept as json of dict objects within raw API data
+def __load_box_office_data(record, movie_data):
+    box_office_json = loads(record['box_office_data'])
+    for field in __BOX_OFFICE_JSON_FIELDNAMES:
         amount_obj = box_office_json.get(field)
         if isinstance(amount_obj, dict):
             value = amount_obj.get("amount") or amount_obj.get("gross", {}).get("amount")
-            processed_record[field] = value if value else "N/A"
+            movie_data[field] = value if value else "N/A"
         else:
-            processed_record[field] = "N/A"
-    return  processed_record
+            movie_data[field] = "N/A"
+    return  movie_data
 
 
-# uses the all() method to specify which records to keep
 def __discard__incomplete_records(movie_data):
-    return [
-        record for record in movie_data
-        if all(
-            value != "N/A" and value != []
-            for key, value in record.items()
-            if key != "Awards"
-        )
-    ]
+    filtered_data = []
+    for record in movie_data:
+        is_valid = True
+        for key, value in record.items():
+            if key == "Awards": continue
+            if value == "N/A" or value == []:
+                is_valid = False
+        if is_valid: filtered_data.append(record)
+    return filtered_data
 
 
-# fixes runtime, date, country, ratings, and director values
-def __normalize_movie_data(record):
-    record["Runtime"] = record["Runtime"].split(" ")[0]
-    date_obj = datetime.strptime(record["Released"], "%d %b %Y")
-    record["Released"] = date_obj.strftime("%Y/%m/%d")
-    record["Country"] = record["Country"].split(",")[0].strip()
-    record["Director"] = record["Director"].split(",")[0].strip()
+# fixes runtime, date, country, ratings, and director values in movie records
+def __normalize_movie_data(movie_record):
+    movie_record["Runtime"]  = movie_record["Runtime"].split(" ")[0]
+    date_obj = datetime.strptime(movie_record["Released"], "%d %b %Y")
+    movie_record["Released"] = date_obj.strftime("%Y/%m/%d")
+    movie_record["Country"]  = movie_record["Country"].split(",")[0].strip()
+    movie_record["Director"] = movie_record["Director"].split(",")[0].strip()
     
     processed_ratings = []
-    for row in record["Ratings"]:
-        source = row.get("Source")
-        raw_value = row.get("Value", "")
+    for rating in movie_record["Ratings"]:
+        source  = rating.get("Source")
+        raw_value = rating.get("Value", "")
         clean_value = ""
         if source == "Internet Movie Database": 
             clean_value = raw_value.split("/")[0]
@@ -107,12 +120,12 @@ def __normalize_movie_data(record):
             processed_ratings.append(f"{source}:{clean_value}")
     
     if not processed_ratings: return None # invalid record
-    record["Ratings"] = ", ".join(processed_ratings)
-    return record
+    movie_record["Ratings"] = ", ".join(processed_ratings)
+    return movie_record
 
 
 def __write_processed_data(movie_data, write_file):
-    fieldnames = __movie_json_fieldnames + __box_office_json_fieldnames
-    writer = csv.DictWriter(write_file, fieldnames=fieldnames)
-    writer.writeheader()
-    writer.writerows(movie_data)
+    fieldnames = __MOVIE_JSON_FIELDNAMES + __BOX_OFFICE_JSON_FIELDNAMES
+    csv_writer = DictWriter(write_file, fieldnames=fieldnames)
+    csv_writer.writeheader()
+    csv_writer.writerows(movie_data)
