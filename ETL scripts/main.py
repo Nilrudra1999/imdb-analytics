@@ -19,8 +19,8 @@ def process_imdb_ids():
 
 
 def process_imdb_data():
-    extract.fetch_movie_data_from_api(BASE_DIRECTORY)
-    transform.parse_raw_movie_data(BASE_DIRECTORY)
+    # extract.fetch_movie_data_from_api(BASE_DIRECTORY)
+    # transform.parse_raw_movie_data(BASE_DIRECTORY)
     load.store_processed_movie_data(BASE_DIRECTORY)
 
 

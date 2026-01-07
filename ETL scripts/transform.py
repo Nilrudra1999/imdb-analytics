@@ -41,15 +41,6 @@ def parse_raw_movie_data(base_directory):
     __write_processed_data(movie_data, writer_file)
 
 
-def __open_reader_file(dataset):
-    reader_file = open(dataset, "r", encoding="utf-8")
-    return reader_file
-
-
-def __open_writer_file(dataset):
-    writer_file = open(dataset, "w", encoding="utf-8")
-    return writer_file
-
 
 def __parsing_data(dataset):
     processed_data = []
@@ -124,8 +115,19 @@ def __normalize_movie_data(movie_record):
     return movie_record
 
 
+
 def __write_processed_data(movie_data, write_file):
     fieldnames = __MOVIE_JSON_FIELDNAMES + __BOX_OFFICE_JSON_FIELDNAMES
     csv_writer = DictWriter(write_file, fieldnames=fieldnames)
     csv_writer.writeheader()
     csv_writer.writerows(movie_data)
+
+
+def __open_reader_file(dataset):
+    reader_file = open(dataset, "r", encoding="utf-8")
+    return reader_file
+
+
+def __open_writer_file(dataset):
+    writer_file = open(dataset, "w", encoding="utf-8")
+    return writer_file

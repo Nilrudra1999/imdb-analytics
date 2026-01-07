@@ -39,19 +39,6 @@ def fetch_movie_data_from_api(base_directory):
     __update_cursor_position(__ID_CURSOR + row_count, env_file)
 
 
-def __open_reader_file(dataset):
-    reader_file = open(dataset, "r", encoding="utf-8")
-    return reader_file
-
-
-def __open_writer_file(dataset):
-    writer_file = open(dataset, "w", encoding="utf-8")
-    return writer_file
-
-
-def __move_to_cursor_position(dataset):
-    for _ in range(__ID_CURSOR): dataset.readline()
-
 
 def __fetching_data(row_count, dataset_read, dataset_write):
     while row_count < __MAX_MOVIES:
@@ -71,12 +58,6 @@ def __fetching_data(row_count, dataset_read, dataset_write):
     return row_count
 
 
-def __update_cursor_position(value: int, env_file):
-    lines = env_file.read_text().splitlines()
-    lines[-1] = f"ID_CURSOR={value}"
-    env_file.write_text("\n".join(lines) + "\n")
-    print(f"ID_CURSOR is at position {value} in .env")
-
 
 def __fetch_omdb_data(movie_id):
     params = {"apikey": __API_KEY, "i": movie_id}
@@ -88,3 +69,24 @@ def __fetch_box_office_data(movie_id):
     url = f"{__IMDB_URL}{movie_id}/boxOffice"
     response = requests.get(url)
     return response.json()
+
+
+def __move_to_cursor_position(dataset):
+    for _ in range(__ID_CURSOR): dataset.readline()
+
+
+def __update_cursor_position(value: int, env_file):
+    lines = env_file.read_text().splitlines()
+    lines[-1] = f"ID_CURSOR={value}"
+    env_file.write_text("\n".join(lines) + "\n")
+    print(f"ID_CURSOR is at position {value} in .env")
+
+
+def __open_reader_file(dataset):
+    reader_file = open(dataset, "r", encoding="utf-8")
+    return reader_file
+
+
+def __open_writer_file(dataset):
+    writer_file = open(dataset, "w", encoding="utf-8")
+    return writer_file
