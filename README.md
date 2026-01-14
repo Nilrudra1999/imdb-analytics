@@ -1,6 +1,6 @@
 # IMDb Analytics
 
-Found below in this README file is a [report](#report) examining IMDb historical data from 2015. The report analyzes the data through various visualizations and breaks down its meaning, then outlines numerous movie predictions based off the gathered evidence. Additionally, the [systems design](#systems-design) section of this README, showcases details about the project's ETL pipeline, data filters, and data warehousing.
+This repository contains an end-to-end data analytics project examining IMDb historical movie data from 2015 till today. The [report](#report) analyzes the data through various visualizations and breaks down its meaning, then outlines numerous movie predictions based off the gathered evidence. Additionally, the [systems design](#systems-design) section of this project showcases details about the project's ETL pipeline, data filters, and data warehousing.
 
 ## Report
 
@@ -14,9 +14,21 @@ The system used for this project is comprised of two parts. First is the [ETL pi
 
 ![ETL breakdown diagram](/systems%20design/ETL%20breakdown.png)
 
-The main python script follows a path of execution based on provided arguments, and either outputs IMDb IDs into a txt file or loads API data into a local database using the ETL pipeline. All scripts are written with a single public method and several private helper methods to maintain modularity, but doesn't follow conventional OOP rules.
+The main python script follows a path of execution based on provided arguments, and either outputs IMDb IDs into a text file or loads API data into a local database using the ETL pipeline. All scripts are written with a single public method and several private helper methods to maintain modularity, but doesn't follow conventional OOP rules.
 
 The virtual environment specifications can be found within the [requirements text file](/systems%20design/requirements.txt) used while running this ETL pipeline.
+
+### Data filters
+
+The following pieces of information were checked to ensure no NULL values were present:
+
+- <b>movies table:</b> title, runtime, release date, country of origin, and at one director's name
+- <b>writers table:</b> names of one or more writers
+- <b>actors table:</b> names of one or more actors
+- <b>genres table:</b> names of one or more genres
+- <b>ratings table:</b> if it belonged to either Internet movie db, Rotten tomatoes, or Metacritic
+- <b>revenues table:</b> the budget, domestic and international gross profit, and the opening weekend profit
+- <b>awards table:</b> this one could have either wins, nominations, both or none (only exception for NULL values)
 
 ### Database Schema
 
