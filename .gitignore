@@ -9,6 +9,5 @@ imdb_analytics*
 # compiled, env, and large dataset files
 __pycache__
 data/title.basics.tsv
-data/title.basics.zip
 .vscode/
 venv/
