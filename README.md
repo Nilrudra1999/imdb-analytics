@@ -1,6 +1,6 @@
 # IMDb Analytics
 
-This repository contains an end-to-end data analytics project examining IMDb historical movie data from 2015 till today. The [report](#report) analyzes the data through various visualizations and breaks down its meaning, then outlines numerous movie predictions based off the gathered evidence. Additionally, the [systems design](#systems-design) section of this project showcases details about the project's ETL pipeline, data filters, and data warehousing.
+This repository contains an end-to-end data analytics project examining IMDb historical movie data from 2015 till today. The [report](#report) extracts analytics from the data through various visualizations and outlines movie predictions based off the evidence. Additionally, the [systems design](#systems-design) section of this project showcases details about the project's ETL pipeline, and data warehousing.
 
 ## Report
 
@@ -8,33 +8,21 @@ Final report (coming soon).
 
 ## Systems Design
 
-The system used for this project is comprised of two parts. First is the [ETL pipeline](/ETL%20scripts/) for data acquisition, using python scripts and a python virtual environment to operate. Second is the data warehouse for data integration, using a local Microsoft SQL express server that is managed through SQL Server Management Studio (SSMS) and [T-SQL scripts](/SQL%20scripts/).
+The system for this project is comprised of two parts. The [ETL pipeline](/ETL%20scripts/) for data acquisition, and the data warehouse for data integration. The pipeline consists of python scripts managed by a virtual environment, while the warehouse is built on a local Microsoft SQL express server managed using SSMS and [T-SQL scripts](/SQL%20scripts/)
 
 ### ETL Pipeline Breakdown
 
 ![ETL breakdown diagram](/systems%20design/ETL%20breakdown.png)
 
-The main python script follows a path of execution based on provided arguments, and either outputs IMDb IDs into a text file or loads API data into a local database using the ETL pipeline. All scripts are written with a single public method and several private helper methods to maintain modularity, but doesn't follow conventional OOP rules.
+The main python script executes based on provided arguments, and either outputs IDs into a text file or loads API data into the data warehouse. All python scripts are written with a single public method and several private helper methods to maintain modularity, but doesn't follow conventional OOP rules.
 
 The virtual environment specifications can be found within the [requirements text file](/systems%20design/requirements.txt) used while running this ETL pipeline.
 
-### Data filters
-
-The following pieces of information, related to each table or table group, were checked to ensure no NULL values were present. These checks are programmed into the "transform" section of the ETL pipeline and is carried out on the the raw CSV data file.
-
-- <b>movies:</b> title, runtime, release date, country of origin, and at least one director's name
-- <b>writers:</b> names of one or more writers
-- <b>actors:</b> names of one or more actors
-- <b>genres:</b> names of one or more genres
-- <b>ratings:</b> if it belonged to either Internet movie db, Rotten tomatoes, or Metacritic
-- <b>revenues:</b> the budget, domestic and international gross profit, and the opening weekend profit
-- <b>awards:</b> this one could have either wins, nominations, both or none (only exception for NULL values)
-
-### Database Schema
+### Data Warehouse/Database Schema
 
 ![Database schema](/systems%20design/database%20schema.png)
 
-The schema follows the standards of a typical relational database with the added restriction that many tables won't accept incomplete data (NULL values) at all. Since this project's analytics rely on the relationship of movies and their ratings, revenues, and cast, it was important to place these constraints into the database from the start.
+The schema follows the standards of a typical relational database, with the added constraint that most tables won't accept NULL values at all. Since this project's analytics rely on the relationship between movies, their ratings, revenues, and cast members, it was important to place NOT NULL constraints into the tables.
 
 The above schema was also used during the creation of the SQL [setup](/SQL%20scripts/database_setup.sql) and [testing](/SQL%20scripts/database_test.sql) scripts.
 
