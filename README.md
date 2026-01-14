@@ -1,6 +1,6 @@
 # IMDb Analytics
 
-Found below in this README file is a [report](#report) examining IMDb historical data from 2015. The report analyzes the data through various visualizations and breaks down its meaning, then outlines numerous movie predictions based off the gathered evidence. Additionally, the [systems design](#systems-design) section of this README, showcasing details about the project's ETL pipeline, data filtering, and data warehousing.
+Found below in this README file is a [report](#report) examining IMDb historical data from 2015. The report analyzes the data through various visualizations and breaks down its meaning, then outlines numerous movie predictions based off the gathered evidence. Additionally, the [systems design](#systems-design) section of this README, showcases details about the project's ETL pipeline, data filters, and data warehousing.
 
 ## Report
 
