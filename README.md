@@ -1,6 +1,6 @@
 # IMDb Analytics
 
-Found below is the [report](#report), with visualizations of the IMDb historical data, breaking down its meaning, and stating future movie predictions based off the evidence. Additionally, there is the [systems design](#systems-design) section, showcasing details about the ETL pipeline, data filtering, and data warehousing.
+Found below in this README file is a [report](#report) examining IMDb historical data from 2015. The report analyzes the data through various visualizations and breaks down its meaning, then outlines numerous movie predictions based off the gathered evidence. Additionally, the [systems design](#systems-design) section of this README, showcasing details about the project's ETL pipeline, data filtering, and data warehousing.
 
 ## Report
 
@@ -8,13 +8,13 @@ Final report (coming soon).
 
 ## Systems Design
 
-The system used for this project is comprised of two parts. One is the [ETL pipeline](/ETL%20scripts/) for data acquisition, made of python scripts and run inside a python virtual environment. Another is the data warehouse for data integration, a local Microsoft SQL express server, managed through SQL Server Management Studio (SSMS) and [T-SQL scripts](/SQL%20scripts/).
+The system used for this project is comprised of two parts. First is the [ETL pipeline](/ETL%20scripts/) for data acquisition, using python scripts and a python virtual environment to operate. Second is the data warehouse for data integration, using a local Microsoft SQL express server that is managed through SQL Server Management Studio (SSMS) and [T-SQL scripts](/SQL%20scripts/).
 
 ### ETL Pipeline Breakdown
 
 ![ETL breakdown diagram](/systems%20design/ETL%20breakdown.png)
 
-The main python script follows a set path of execution based on some arguments, and either outputs IMDb IDs into a txt file or loads API data into a local database using the ETL pipeline. All scripts are written with a single public method and several private helper methods to maintain modularity, but doesn't follow conventional OOP rules.
+The main python script follows a path of execution based on provided arguments, and either outputs IMDb IDs into a txt file or loads API data into a local database using the ETL pipeline. All scripts are written with a single public method and several private helper methods to maintain modularity, but doesn't follow conventional OOP rules.
 
 The virtual environment specifications can be found within the [requirements text file](/systems%20design/requirements.txt) used while running this ETL pipeline.
 
