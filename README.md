@@ -1,6 +1,6 @@
 # IMDb Analytics
 
-Found below is the report, with visualizations of the IMDb historical data, breaking down its meaning, and stating future movie predictions based off the evidence. Additionally, there is the systems design section, showcasing details about the ETL pipeline, data filtering, and data warehousing.
+Found below is the [report](#report), with visualizations of the IMDb historical data, breaking down its meaning, and stating future movie predictions based off the evidence. Additionally, there is the [systems design](#systems-design) section, showcasing details about the ETL pipeline, data filtering, and data warehousing.
 
 ## Report
 
@@ -8,7 +8,7 @@ Final report (coming soon).
 
 ## Systems Design
 
-The system used for this project is comprised of two parts. One is the ETL pipeline, made of python scripts and run inside a python virtual environment (data acquisition). Another is the data warehouse, a local Microsoft SQL express server, managed through SQL Server Management Studio (SSMS) and T-SQL scripts (data integration and analytics).
+The system used for this project is comprised of two parts. One is the [ETL pipeline](/ETL%20scripts/) for data acquisition, made of python scripts and run inside a python virtual environment. Another is the data warehouse for data integration, a local Microsoft SQL express server, managed through SQL Server Management Studio (SSMS) and [T-SQL scripts](/SQL%20scripts/).
 
 ### ETL Pipeline Breakdown
 
@@ -16,7 +16,7 @@ The system used for this project is comprised of two parts. One is the ETL pipel
 
 ![Database schema](/systems%20design/database%20schema.png)
 
-The schema follows the standards of a typical relational database with the added restriction that many tables won't accept incomplete data (NULL values) at all. Since this project's analytics rely on the relationship of movies and their ratings, revenues, and cast it was important to place these constraints into the database from the start.
+The schema follows the standards of a typical relational database with the added restriction that many tables won't accept incomplete data (NULL values) at all. Since this project's analytics rely on the relationship of movies and their ratings, revenues, and cast, it was important to place these constraints into the database from the start.
 
 The above schema was also used during the creation of the SQL [setup](/SQL%20scripts/database_setup.sql) and [testing](/SQL%20scripts/database_test.sql) scripts.
 
