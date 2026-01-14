@@ -20,15 +20,15 @@ The virtual environment specifications can be found within the [requirements tex
 
 ### Data filters
 
-The following pieces of information were checked to ensure no NULL values were present:
+The following pieces of information, related to each table or table group, were checked to ensure no NULL values were present. These checks are programmed into the "transform" section of the ETL pipeline and is carried out on the the raw CSV data file.
 
-- <b>movies table:</b> title, runtime, release date, country of origin, and at one director's name
-- <b>writers table:</b> names of one or more writers
-- <b>actors table:</b> names of one or more actors
-- <b>genres table:</b> names of one or more genres
-- <b>ratings table:</b> if it belonged to either Internet movie db, Rotten tomatoes, or Metacritic
-- <b>revenues table:</b> the budget, domestic and international gross profit, and the opening weekend profit
-- <b>awards table:</b> this one could have either wins, nominations, both or none (only exception for NULL values)
+- <b>movies:</b> title, runtime, release date, country of origin, and at least one director's name
+- <b>writers:</b> names of one or more writers
+- <b>actors:</b> names of one or more actors
+- <b>genres:</b> names of one or more genres
+- <b>ratings:</b> if it belonged to either Internet movie db, Rotten tomatoes, or Metacritic
+- <b>revenues:</b> the budget, domestic and international gross profit, and the opening weekend profit
+- <b>awards:</b> this one could have either wins, nominations, both or none (only exception for NULL values)
 
 ### Database Schema
 
