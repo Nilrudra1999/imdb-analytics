@@ -12,6 +12,12 @@ The system used for this project is comprised of two parts. One is the [ETL pipe
 
 ### ETL Pipeline Breakdown
 
+![ETL breakdown diagram](/systems%20design/ETL%20breakdown.png)
+
+The main python script follows a set path of execution based on some arguments, and either outputs IMDb IDs into a txt file or loads API data into a local database using the ETL pipeline. All scripts are written with a single public method and several private helper methods to maintain modularity, but doesn't follow conventional OOP rules.
+
+The virtual environment specifications can be found within the [requirements text file](/systems%20design/requirements.txt) used while running this ETL pipeline.
+
 ### Database Schema
 
 ![Database schema](/systems%20design/database%20schema.png)
