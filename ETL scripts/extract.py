@@ -20,7 +20,7 @@ __OMDB_URL  = getenv("OMDB_API_BASE_URL")
 __API_KEY   = getenv("API_KEY")
 
 __ID_CURSOR  = int(getenv("ID_CURSOR", 0))
-__MAX_MOVIES = 800
+__MAX_MOVIES = 1000
 
 
 def fetch_movie_data_from_api(base_directory):
