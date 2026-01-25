@@ -5,7 +5,7 @@ Author: Nilrudra Mukhopadhyay
 Email: nilrudram@gmail.com
 -------------------------------------------------------------------------------------------
 Looking at the way movies and their quantitative metrics changed over time. The metrics 
-in this case are, but not limited to runtime, country of origin, budgets, domestic and 
+in this case are but not limited to runtime, country of origin, budgets, domestic and 
 international revenues, median ratings, and frequency of movies made per country.
 ******************************************************************************************/
 use imdb_analytics_database;
