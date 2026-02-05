@@ -8,7 +8,7 @@
     normalized data from the APIs into the local database. This is the
     final step of the ETL pipeline for gathering imdb movie data. 
 ----------------------------------------------------------------------------"""
-from csv import DictReader
+import pandas as pd
 import re
 import pyodbc
 
@@ -21,18 +21,14 @@ __CONNECTION_STRING = (
     "TrustServerCertificate=yes;"
 )
 
-__MOVIE_DATA = {
-    "title": "", "runtime": 0, "release": "", "country": "",
-    "director_name": "", "writers": [], "actors": [], 
-    "genres": [], "ratings": [], "awards": [],
-    "prod_bg": 0, "dome_gr": 0, "intr_gr": 0, "op_w_gr": 0
-}
+__MOVIE_DATA = {}
 
 
 def store_processed_movie_data(base_directory):
     processed_csv = base_directory / "data" / "processed" / "data.csv"
+    df = pd.read_csv(processed_csv, keep_default_na=False)
     connection, cursor = __open_db_connection()
-    records = __get_records_from_csv(processed_csv)
+    records = df.to_dict('records')
     record_cnt = 0
     for record in records:
         __get_database_data(record)
@@ -49,30 +45,31 @@ def store_processed_movie_data(base_directory):
     print(f"Added {record_cnt} records to the database.")
 
 
+
 def __get_database_data(record):
+    global __MOVIE_DATA
     wins = nominations = None
-    __MOVIE_DATA["director_name"] = record.get("Director")
-    __MOVIE_DATA["title"]   = record.get("Title")
-    __MOVIE_DATA["runtime"] = record.get("Runtime")
-    __MOVIE_DATA["release"] = record.get("Released")
-    __MOVIE_DATA["country"] = record.get("Country")
-    
-    __MOVIE_DATA["writers"] = [w.strip() for w in record.get("Writer", "").split(",")]
-    __MOVIE_DATA["actors"]  = [a.strip() for a in record.get("Actors", "").split(",")]
-    __MOVIE_DATA["genres"]  = [g.strip() for g in record.get("Genre", "").split(",")]
-    __MOVIE_DATA["ratings"] = [r.strip() for r in record.get("Ratings", "").split(",")]
-    
-    __MOVIE_DATA["prod_bg"] = int(record.get("productionBudget", 0))
-    __MOVIE_DATA["dome_gr"] = int(record.get("domesticGross", 0))
-    __MOVIE_DATA["intr_gr"] = int(record.get("worldwideGross", 0))
-    __MOVIE_DATA["op_w_gr"] = int(record.get("openingWeekendGross", 0))
-    
-    raw_awards = record.get("Awards", "")
+    __MOVIE_DATA = {
+        "director_name": record.get("Director"),
+        "title": record.get("Title"),
+        "runtime": record.get("Runtime"),
+        "release": record.get("Released"),
+        "country": record.get("Country"),
+        "writers": [w.strip() for w in str(record.get("Writer", "")).split(",")],
+        "actors":  [a.strip() for a in str(record.get("Actors", "")).split(",")],
+        "genres":  [g.strip() for g in str(record.get("Genre", "")).split(",")],
+        "ratings": [r.strip() for r in str(record.get("Ratings", "")).split(",")],
+        "prod_bg": int(float(record.get("productionBudget"))),
+        "dome_gr": int(float(record.get("domesticGross"))),
+        "intr_gr": int(float(record.get("worldwideGross"))),
+        "op_w_gr": int(float(record.get("openingWeekendGross")))
+    }
+    raw_awards = str(record.get("Awards", ""))
     if raw_awards and raw_awards != "N/A":
         win_match = re.search(r'(\d+)\s+win', raw_awards, re.IGNORECASE)
         nom_match = re.search(r'(\d+)\s+nomination', raw_awards, re.IGNORECASE)
-        if win_match: wins = win_match.group(0)
-        if nom_match: nominations = nom_match.group(0)
+        if win_match: wins = win_match.group(1)
+        if nom_match: nominations = nom_match.group(1)
     __MOVIE_DATA["awards"] = [wins, nominations]
 
 
@@ -80,7 +77,7 @@ def __get_database_data(record):
 def __insert_into_directors(cursor):
     id = 0
     name = __MOVIE_DATA["director_name"]
-    cursor.execute("select director_id from directors where dir_name = ?", (name,))
+    cursor.execute("select director_id from directors where director_name = ?", (name,))
     result = cursor.fetchone()
     if result: id = result[0]
     else:
@@ -91,8 +88,9 @@ def __insert_into_directors(cursor):
 
 def __insert_into_genres(movie_id, cursor):
     id = __get_max_id("select max(genre_id) from genres", cursor)
+    if __MOVIE_DATA["genres"] == "N/A": return
     for genre in __MOVIE_DATA["genres"]:
-        cursor.execute("select genre_id from genres where grn_name = ?", (genre,))
+        cursor.execute("select genre_id from genres where genre_name = ?", (genre,))
         result = cursor.fetchone()
         if result:
             cursor.execute("insert into associated_genres values (?, ?)",
@@ -105,8 +103,9 @@ def __insert_into_genres(movie_id, cursor):
 
 def __insert_into_writers(movie_id, cursor):
     id = __get_max_id("select max(writer_id) from writers", cursor)
+    if __MOVIE_DATA["writers"] == "N/A": return
     for writer in __MOVIE_DATA["writers"]:
-        cursor.execute("select writer_id from writers where wtr_name = ?", (writer,))
+        cursor.execute("select writer_id from writers where writer_name = ?", (writer,))
         result = cursor.fetchone()
         if result:
             cursor.execute("insert into associated_writers values (?, ?)",
@@ -119,8 +118,9 @@ def __insert_into_writers(movie_id, cursor):
 
 def __insert_into_actors(movie_id, cursor):
     id = __get_max_id("select max(actor_id) from actors", cursor)
+    if __MOVIE_DATA["actors"] == "N/A": return
     for actor in __MOVIE_DATA["actors"]:
-        cursor.execute("select actor_id from actors where atr_name = ?", (actor,))
+        cursor.execute("select actor_id from actors where actor_name = ?", (actor,))
         result = cursor.fetchone()
         if result:
             cursor.execute("insert into associated_actors values (?, ?)",
@@ -138,7 +138,7 @@ def __insert_into_movies(dir_id, cursor):
     country = __MOVIE_DATA["country"]
     id = __get_max_id("select max(movie_id) from movies", cursor)
     cursor.execute("insert into movies values (?, ?, ?, ?, ?, ?)",
-                   (id, title, runtime, release, country, dir_id))
+                   (id, title, release, runtime, country, dir_id))
     return id
 
 
@@ -161,7 +161,7 @@ def __insert_into_ratings(movie_id, cursor):
         src  = ptrs[0].strip()
         val  = int(float(ptrs[1].strip()))
         cursor.execute("insert into ratings values (?, ?, ?, ?)", 
-                       (id, src, val, movie_id))
+                       (id, movie_id, src, val))
         id = id + 1
 
 
@@ -180,11 +180,6 @@ def __get_max_id(stmt: str, cursor):
     if id_result[0] is not None: curr_max = id_result[0]
     else: curr_max = 0
     return curr_max + 1
-
-
-def __get_records_from_csv(reader_file):
-    reader = open(reader_file, "r", encoding="utf-8")
-    return DictReader(reader)
 
 
 def __open_db_connection():

@@ -23,10 +23,12 @@ __ID_CURSOR  = int(getenv("ID_CURSOR", 0))
 __MAX_MOVIES = 1000
 
 
+# the "cursor position" being referred to within this method is linked to an env variable
+# the variable keeps track of where the ETL pipeline last left off when collecting data
 def fetch_movie_data_from_api(base_directory):
     ids_file  = base_directory / "data" / "imdb_movie_ids.txt"
     raw_csv   = base_directory / "data" / "raw" / "data.csv"
-    env_file  = base_directory / "ETL scripts" / ".env"
+    env_file  = base_directory / "src" / "etl scripts" / ".env"
     row_count = 0
     
     reader_file = __open_reader_file(ids_file)
@@ -43,7 +45,9 @@ def fetch_movie_data_from_api(base_directory):
 def __fetching_data(row_count, dataset_read, dataset_write):
     while row_count < __MAX_MOVIES:
         record = dataset_read.readline()
-        if not record: break # EOF state
+        if not record: # EOF state
+            print("Data for all specified IMDb IDs have been acquired")
+            break
         
         movie_id = record.strip()
         movie_data = __fetch_omdb_data(movie_id)

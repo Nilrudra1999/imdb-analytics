@@ -12,7 +12,7 @@ import argparse
 from pathlib import Path
 import movie_id_selector, extract, transform, load
 
-BASE_DIRECTORY = Path(__file__).resolve().parent.parent
+BASE_DIRECTORY = Path(__file__).resolve().parent.parent.parent
 
 def process_imdb_ids():
     movie_id_selector.extract_ids_from_dataset(BASE_DIRECTORY)

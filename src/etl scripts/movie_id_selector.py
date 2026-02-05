@@ -6,15 +6,14 @@
     -----------------------------------------------------------------------
     This script extracts IDs from the publicly available IMDb dataset,
     using the title type of "movie", and a benchmark year to filter the 
-    records. Then writes the IDs into a .txt file.
+    records. Then writes the IDs into a text file.
 ----------------------------------------------------------------------------"""
 from csv import DictReader
 
-__start_year = 2015  # filter movies by year
+__start_year = 2014  # filter movies by year
 
 def extract_ids_from_dataset(base_directory):
-    data_directory = base_directory / "data"
-    tsv_file  = data_directory / "title.basics.tsv"
+    tsv_file  = base_directory / "data" / "title.basics.tsv"
     text_file = base_directory / "data" / "imdb_movie_ids.txt"
     
     reader_file = __open_reader_file(tsv_file)
