@@ -5,11 +5,10 @@
 # database object files, size is too large for github upload
 # a .csv file package for DB tables will be provided instead 
 imdb_analytics*
-data/processed/
-data/raw/
 
 # compiled, env, and large dataset files
 __pycache__
 data/title.basics.tsv
 .vscode/
 venv/
+daily_run_threshold.txt

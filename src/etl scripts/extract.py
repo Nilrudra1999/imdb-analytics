@@ -19,8 +19,11 @@ __IMDB_URL  = getenv("IMDB_API_BASE_URL")
 __OMDB_URL  = getenv("OMDB_API_BASE_URL")
 __API_KEY   = getenv("API_KEY")
 
+# Free IMDb API has a "at one time" response limit of 50
+# The limit restarts after 20-30 mins (hypothetically)
+# OMDb API has a total daily limit of 1000 total requests
 __ID_CURSOR  = int(getenv("ID_CURSOR", 0))
-__MAX_MOVIES = 1000
+__MAX_MOVIES = 50
 
 
 # the "cursor position" being referred to within this method is linked to an env variable
@@ -65,14 +68,26 @@ def __fetching_data(row_count, dataset_read, dataset_write):
 
 def __fetch_omdb_data(movie_id):
     params = {"apikey": __API_KEY, "i": movie_id}
-    response = requests.get(__OMDB_URL, params=params)
-    return response.json()
+    try:
+        response = requests.get(__OMDB_URL, params=params)
+        response.raise_for_status()
+        return response.json()
+    except Exception as e:
+        print(f"OMDB Error: {e}")
+        return {"error": "OMDB fetch failed"}
+
 
 
 def __fetch_box_office_data(movie_id):
     url = f"{__IMDB_URL}{movie_id}/boxOffice"
-    response = requests.get(url)
-    return response.json()
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching box office for {movie_id}: {e}")
+        return {"error": "Could not retrieve data"}
+
 
 
 def __move_to_cursor_position(dataset):

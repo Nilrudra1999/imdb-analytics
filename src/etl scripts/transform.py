@@ -31,11 +31,12 @@ def parse_raw_movie_data(base_directory):
     omdb_df = pd.json_normalize(df_raw['omdb_data'].apply(loads))
     box_office_df = df_raw['box_office_data'].apply(loads).apply(__extract_box_office)
     box_office_df = pd.DataFrame(box_office_df.tolist())
-    df = pd.concat([omdb_df[__MOVIE_JSON_FIELDNAMES], box_office_df[__BOX_OFFICE_JSON_FIELDNAMES]], axis=1)
-    required = ["Title", "Runtime", "Released", "Country", "Director", "productionBudget"]
     
+    df = pd.concat([omdb_df[__MOVIE_JSON_FIELDNAMES], box_office_df[__BOX_OFFICE_JSON_FIELDNAMES]], axis=1)
+    required_fields = ["Title", "Runtime", "Released", "Country", "Director", 
+                       "productionBudget", "openingWeekendGross"]
     df.replace("N/A", pd.NA, inplace=True)
-    df.dropna(subset=required, inplace=True)
+    df.dropna(subset=required_fields, inplace=True)
     df = __normalize_dataframe(df)
     df.to_csv(processed_csv, index=False)
 
@@ -53,16 +54,21 @@ def __extract_box_office(entry):
 
 
 # fixes runtime, date, country, ratings, and director values in movie records
+# assuming opening weekend covers 2 days of profit from sales, domestics BO = 35 days mid
+# assuming as well that international sales account for 1.8x BO amount adjusting for vol
+# these parameters will be used for filler values if domestic or international BO = NaN
 def __normalize_dataframe(df):
+    df['productionBudget']    = pd.to_numeric(df['productionBudget'], errors='coerce')
+    df['openingWeekendGross'] = pd.to_numeric(df['openingWeekendGross'], errors='coerce')
+    domestic_profit_normalization = (df['openingWeekendGross'] / 2.0) * 35.0
+    intern_profit_normalization   = domestic_profit_normalization * 1.8
+    df['domesticGross']  = pd.to_numeric(df['domesticGross'], errors='coerce').fillna(domestic_profit_normalization)
+    df['worldwideGross'] = pd.to_numeric(df['worldwideGross'], errors='coerce').fillna(intern_profit_normalization)
     df['Runtime']  = df['Runtime'].str.split(" ").str[0]
-    df['Released'] = pd.to_datetime(df['Released'], format='%d %b %Y').dt.strftime('%Y/%m/%d')
+    df['Released'] = pd.to_datetime(df['Released'], format='%d %b %Y', errors='coerce').dt.strftime('%Y/%m/%d')
     df['Country']  = df['Country'].str.split(",").str[0].str.strip()
     df['Director'] = df['Director'].str.split(",").str[0].str.strip()
     df['Ratings']  = df['Ratings'].apply(__process_ratings_list)
-    df['productionBudget'] = pd.to_numeric(df['productionBudget'], errors='coerce')
-    df['domesticGross']    = pd.to_numeric(df['domesticGross'], errors='coerce').fillna(df['productionBudget'] * 1.5).astype(int)
-    df['worldwideGross']   = pd.to_numeric(df['worldwideGross'], errors='coerce').fillna(df['productionBudget'] * 1.5).astype(int)
-    df['openingWeekendGross'] = pd.to_numeric(df['openingWeekendGross'], errors='coerce').fillna(df['productionBudget'] * 0.2).astype(int)
     return df
 
 

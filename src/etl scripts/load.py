@@ -59,10 +59,10 @@ def __get_database_data(record):
         "actors":  [a.strip() for a in str(record.get("Actors", "")).split(",")],
         "genres":  [g.strip() for g in str(record.get("Genre", "")).split(",")],
         "ratings": [r.strip() for r in str(record.get("Ratings", "")).split(",")],
-        "prod_bg": int(float(record.get("productionBudget"))),
-        "dome_gr": int(float(record.get("domesticGross"))),
-        "intr_gr": int(float(record.get("worldwideGross"))),
-        "op_w_gr": int(float(record.get("openingWeekendGross")))
+        "prod_bg": float(record.get("productionBudget")),
+        "dome_gr": float(record.get("domesticGross")),
+        "intr_gr": float(record.get("worldwideGross")),
+        "op_w_gr": float(record.get("openingWeekendGross"))
     }
     raw_awards = str(record.get("Awards", ""))
     if raw_awards and raw_awards != "N/A":
