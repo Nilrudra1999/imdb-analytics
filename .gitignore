@@ -3,7 +3,7 @@
 .env
 
 # database object files, size is too large for github upload
-# individual .xlsx files for DB tables will be provided instead 
+# a .csv file package for DB tables will be provided instead 
 imdb_analytics*
 
 # compiled, env, and large dataset files
