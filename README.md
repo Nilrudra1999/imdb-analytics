@@ -7,7 +7,7 @@
 
 Business question:
 
-- As a studio trying to release a movie in 2026 what would make us the most amount of money/box office success?
+- As a studio trying to release a movie in 2026 what would make the most amount of money/box office success?
 
 Tech Stack:
 

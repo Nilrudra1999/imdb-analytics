@@ -20,7 +20,7 @@ insert into dbo.writers   values (101, 'test writer 1');
 insert into dbo.actors    values (101, 'test actor 1');
 insert into dbo.genres    values (101, 'test genre 1');
 
-insert into dbo.movies values (101, 'movie 1', 3600, '2010/05/11', 'USA', 101);
+insert into dbo.movies	values (101, 'movie 1', 3600, '2010/05/11', 'USA', 101);
 insert into dbo.associated_writers values (101, 101);
 insert into dbo.associated_actors  values (101, 101);
 insert into dbo.associated_genres  values (101, 101);
@@ -35,13 +35,13 @@ insert into dbo.ratings  values (103, 'amazon reviews', 7, 101);
 
 -- following update stmts should execute without errors
 update dbo.movies  set runtime = 4500, country_of_origin = 'Canada', title = 'First movie';
-update dbo.genres  set grn_name = 'Sci-fi'	   where genre_id = 101;
-update dbo.writers set wtr_name = 'Robert J.'  where writer_id = 101;
-update dbo.actors  set atr_name = 'Samuel Kim' where actor_id = 101;
+update dbo.genres  set genre_name = 'Sci-fi'	 where genre_id = 101;
+update dbo.writers set writer_name = 'Robert J.' where writer_id = 101;
+update dbo.actors  set actor_name = 'Samuel Kim' where actor_id = 101;
 
-update dbo.directors set dir_name = 'John Carpenter' where director_id = 101;
+update dbo.directors set director_name = 'John Carpenter' where director_id = 101;
 update dbo.awards	 set award = 'best screenplay', nomination = NULL where nomination = 'oscar';
-update dbo.ratings	 set rtg_source = 'Blockbuster.com' where rtg_source = 'google';
+update dbo.ratings	 set rating_src = 'Blockbuster.com' where rating_src = 'google';
 update dbo.revenues  set prod_budget = 75000150.55		where domestic_gross = 32000000.75;
 -- following updates should fail (updating PK when FKs reference it) 
 update dbo.movies	 set movie_id = 102;
@@ -52,41 +52,41 @@ update dbo.genres	 set genre_id = 102;
 
 
 -- multi-insert stmts should execute without errors
-insert into dbo.directors (director_id, dir_name)
+insert into dbo.directors (director_id, director_name)
 values
 	(102, 'Test Dir 2'),
 	(103, 'Test Dir 3'),
 	(104, 'Test Dir 4'),
 	(105, 'Test Dir 5');
 
-insert into dbo.writers (writer_id, wtr_name)
+insert into dbo.writers (writer_id, writer_name)
 values
 	(102, 'Test Writer 2'),
 	(103, 'Test Writer 3'),
 	(104, 'Test Writer 4'),
 	(105, 'Test Writer 5');
 
-insert into dbo.actors (actor_id, atr_name)
+insert into dbo.actors (actor_id, actor_name)
 values
 	(102, 'Test Actor 2'),
 	(103, 'Test Actor 3'),
 	(104, 'Test Actor 4'),
 	(105, 'Test Actor 5');
 
-insert into dbo.genres (genre_id, grn_name)
+insert into dbo.genres (genre_id, genre_name)
 values
 	(102, 'Adventure'),
 	(103, 'Superhero'),
 	(104, 'Medieval'),
 	(105, 'Wester');
 
-insert into dbo.movies (movie_id, title, runtime, release_date, country_of_origin, director)
+insert into dbo.movies (movie_id, title, release_date, runtime, country_of_origin, director)
 values
-	(102, 'New movie 2', 7599, '2021/06/22', 'Finland', 103),
-	(103, 'New movie 3', 1199, '2022/06/22', 'Finland', 104),
-	(104, 'New movie 4', 4509, '2018/04/14', 'USA', 102),
-	(105, 'New movie 5', 5007, '2021/01/05', 'Canada', 103),
-	(106, 'New movie 6', 2309, '2018/04/11', 'USA', 105);
+	(102, 'New movie 2', '2021/06/22', 7599, 'Finland', 103),
+	(103, 'New movie 3', '2022/06/22', 1199, 'Finland', 104),
+	(104, 'New movie 4', '2018/04/14', 4509, 'USA', 102),
+	(105, 'New movie 5', '2021/01/05', 5007, 'Canada', 103),
+	(106, 'New movie 6', '2018/04/11', 2309, 'USA', 105);
 
 insert into dbo.associated_genres (movie_id, genre_id)
 values
@@ -112,20 +112,20 @@ values
 	(105, 102),
 	(106, 103);
 
-insert into dbo.ratings (rating_id, rtg_source, rtg_value, movie_id)
+insert into dbo.ratings (rating_id, movie_id, rating_src, rating_value)
 values
-	(104, 'google reviews', 5, 102),
-	(105, 'amazon reviews', 6, 102),
-	(106, 'rotten tomato', 5, 102),
-	(107, 'google reviews', 7, 103),
-	(108, 'Blockbuster.com', 8, 103),
-	(109, 'rotten tomato', 9, 104),
-	(110, 'google reviews', 8, 104),
-	(111, 'rotten tomato', 3, 105),
-	(112, 'amazon reviews', 4, 105),
-	(113, 'Blockbuster.com', 3, 105),
-	(114, 'google reviews', 5, 106),
-	(115, 'rotten tomato', 6, 106);
+	(104, 102, 'google reviews', 5),
+	(105, 102, 'amazon reviews', 6),
+	(106, 102, 'rotten tomato', 5),
+	(107, 103, 'google reviews', 7),
+	(108, 103, 'Blockbuster.com', 8),
+	(109, 104, 'rotten tomato', 9),
+	(110, 104, 'google reviews', 8),
+	(111, 105, 'rotten tomato', 3),
+	(112, 105, 'amazon reviews', 4),
+	(113, 105, 'Blockbuster.com', 3),
+	(114, 106, 'google reviews', 5),
+	(115, 106, 'rotten tomato', 6);
 
 insert into dbo.awards (movie_id, award, nomination)
 values
@@ -149,10 +149,10 @@ values
 
 
 -- multi-update stmts should execute without errors
-update dbo.ratings   set rtg_value = 10 where rtg_source = 'google reviews';
-update dbo.revenues  set international_gross = 15500050.17   where movie_id > 103;
-update dbo.awards	 set nomination = 'best record tester'   where nomination is NULL;
-update dbo.directors set dir_name = 'John db-rec tester doe' where director_id > 101;
+update dbo.ratings   set rating_value = 10 where rating_src = 'google reviews';
+update dbo.revenues  set international_gross = 15500050.17 where movie_id > 103;
+update dbo.awards	 set nomination = 'best record tester' where nomination is NULL;
+update dbo.directors set director_name = 'John db-rec tester doe' where director_id > 101;
 
 
 -- insertion/updates check using select, join, and sub-select queries
@@ -169,18 +169,18 @@ select * from dbo.writers;
 select * from dbo.directors;
 
 select movie_id, title, runtime, release_date, country_of_origin, 
-	(select dir_name from dbo.directors where director_id = director) as director_name
+	(select director_name from dbo.directors where director_id = director) as director_name
 from dbo.movies;
 
 select title, runtime, release_date, country_of_origin, 
-	(select wtr_name from dbo.writers w where w.writer_id = aw.writer_id) as writer_name
+	(select writer_name from dbo.writers w where w.writer_id = aw.writer_id) as writer_name
 from dbo.movies m 
 join dbo.associated_writers aw
   on m.movie_id = aw.movie_id;
 
 select title as 'movie name', country_of_origin, 
-	(select dir_name from dbo.directors where director_id = director) as 'director',
-	 rating_id, rtg_source as 'source', rtg_value as 'values 1-10',
+	(select director_name from dbo.directors where director_id = director) as 'director',
+	 rating_id, rating_src as 'source', rating_value as 'values 1-10',
 	 prod_budget, domestic_gross as 'domestic', international_gross as 'internation'
 from dbo.ratings rt 
 join dbo.revenues re
@@ -189,10 +189,10 @@ join dbo.movies mo
   on rt.movie_id = mo.movie_id;
 
 select m.movie_id, m.title, 
-	(select atr_name from dbo.actors a    where a.actor_id = aa.actor_id)   as 'actor',
-	(select wtr_name from dbo.writers w   where w.writer_id = aw.writer_id) as 'writer', 
-	(select dir_name from dbo.directors d where d.director_id = m.director)	as 'director name',
-	(select grn_name from dbo.genres g    where g.genre_id = ag.genre_id)   as 'genre'
+	(select actor_name from dbo.actors a       where a.actor_id = aa.actor_id)   as 'actor',
+	(select writer_name from dbo.writers w     where w.writer_id = aw.writer_id) as 'writer', 
+	(select director_name from dbo.directors d where d.director_id = m.director) as 'director name',
+	(select genre_name from dbo.genres g       where g.genre_id = ag.genre_id)   as 'genre'
 from dbo.movies m
 join dbo.associated_writers aw
   on m.movie_id = aw.movie_id
