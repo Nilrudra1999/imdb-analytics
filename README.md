@@ -1,14 +1,14 @@
-# IMDb Analytics
+# File Success Predictor
 
 <b>Author:</b> Nilrudra Mukhopadhyay<br>
-<b>Project Type:</b> Data warehousing and Predictive Analytics project - independently built<br>
+<b>Project Type:</b> Predictive Analytics and Data warehousing project - independently built<br>
 
 ## Project Overview
 
 Business question:
 
-- Based on given information on a new movie such as ratings, genre, and crew. Can we predict how much a movie will make at the box office during Opening weekend, domestic gross, and/or international gross profits?
-- Can we also predict what it's ratings would look?
+- Based on given information on a new movie such as genre and crew, can a prediction be made of how successful the movie will be at the box office?
+- Can it's ratings after release also be predicted?
 
 Tech Stack:
 
