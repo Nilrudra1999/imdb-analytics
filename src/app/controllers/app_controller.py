@@ -9,6 +9,8 @@ from re import match
 from customtkinter import CTk
 from views.home_view import HomeView
 from views.predictor_view import PredictorView
+from models.visualizer_model import VisualizerModel
+from models.predictor_model import PredictorModel
 
 BG_COLOR_LIGHT = "#28253b"
 BG_COLOR_DARK  = "#13121e"
@@ -34,7 +36,8 @@ class AppController:
             "home view": HomeView(self, self.get_window()),
             "predictor view": PredictorView(self, self.get_window()),
         }
-        print("app ready for action") # add models here later
+        self.predictor  = PredictorModel()
+        self.visualizer = VisualizerModel()
     
     
     # ---------- main application methods ----------
@@ -85,13 +88,15 @@ class AppController:
         if not valid:
             view.input_err_label.configure(text=error_text)
             return
-        print("a prediction would be made here") # add models here
+        user_msg_text = "Making predictions please wait, this takes some time"
+        view.users_msg_label.configure(text=user_msg_text)
     
     
     
     # ---------- application wide helper methods ----------
     def helper_clear_form_errors(self, view):
         view.input_err_label.configure(text="")
+        view.users_msg_label.configure(text="")
         view.dir_name_ebox.configure(border_color="#110f24")
         view.genre_name_ebox.configure(border_color="#110f24")
         view.prod_bgt_ebox.configure(border_color="#110f24")

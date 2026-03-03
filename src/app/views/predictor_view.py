@@ -38,16 +38,15 @@ class PredictorView(CTkFrame):
         self.actor_name_ebox  = self.make_entry_box(self.form, "Enter Lead Actor Name")
         self.writer_name_ebox = self.make_entry_box(self.form, "Enter Writer Name")
         self.input_err_label  = self.make_label(self.form, "", 20, 260)
+        self.users_msg_label  = self.make_label(self.form, "", 20, 260)
 
         self.make_prediction_btn = self.make_button(self.form, "Make Prediction",
             lambda: self.controller.predict_view_handle_making_prediction())
         self.clear_form_btn = self.make_button(self.form, "Clear Form",
             lambda: self.controller.predict_view_handle_clearing_form())
-        self.go_back_btn = CTkButton(
-            self, text="B\nA\nC\nK", font=("System", 26),text_color=PRIMARY_TEXT,
-            fg_color=BG_COLOR, width=20, height=50, hover=False,
-            command=lambda: self.controller.predict_view_handle_going_back()
-        )
+        self.go_back_btn = CTkButton(self, text="B\nA\nC\nK", font=("System", 26),
+            text_color=PRIMARY_TEXT, fg_color=BG_COLOR, width=20, height=50, hover=False,
+            command=lambda: self.controller.predict_view_handle_going_back())
         self.go_back_btn.bind("<Enter>", lambda e:
             self.go_back_btn.configure(fg_color=FOCUSED_BTN))
         self.go_back_btn.bind("<Leave>", lambda e:
@@ -74,6 +73,7 @@ class PredictorView(CTkFrame):
         
         self.make_prediction_btn.pack(pady=(20, 0))
         self.clear_form_btn.pack(pady=(10, 10))
+        self.users_msg_label.pack(pady=(40, 0))
         self.go_back_btn.place(x=1233, y=20)
         
         
