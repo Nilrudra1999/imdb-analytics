@@ -5,7 +5,7 @@ Author: Nilrudra Mukhopadhyay
 Email: nilrudram@gmail.com
 ------------------------------------------------------------------------------
 The script performs the following actions on the existing database:
-1. uses the master system to perform the enxt actions
+1. uses the master system to perform the next actions
 2. sets database offline before file transfer and alters the filenames
 3. sets database back online after the transfer is complete
 *****************************************************************************/
